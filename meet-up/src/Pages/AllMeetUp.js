@@ -26,7 +26,7 @@ const DUMMY_DATA = [
 const AllMeetUp = () => {
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
 
       <div>
         <h1>All Meetups</h1>
