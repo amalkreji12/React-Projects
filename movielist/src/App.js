@@ -19,6 +19,10 @@ function App() {
     const data = await response.json();
     setMovies(data.Search);
     setIsLoading(false);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
   }
 
   useEffect(() => {
@@ -38,7 +42,7 @@ function App() {
     <div className="app">
       <h1>Movie List</h1>
 
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} searchMovie={searchMovie} />
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} searchMovie={searchMovie} handleClearSearch={handleClearSearch} />
 
       {
         movies?.length > 0 ?
