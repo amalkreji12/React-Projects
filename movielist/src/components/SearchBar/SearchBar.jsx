@@ -3,7 +3,12 @@ import SearchIcon from "../../assets/images/Search.svg";
 import { IoIosSearch } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 
-const SearchBar = ({ searchTerm, setSearchTerm, searchMovie, handleClearSearch }) => {
+const SearchBar = ({
+  searchTerm,
+  setSearchTerm,
+  searchMovie,
+  handleClearSearch,
+}) => {
   return (
     <div className="search">
       <input
@@ -11,7 +16,7 @@ const SearchBar = ({ searchTerm, setSearchTerm, searchMovie, handleClearSearch }
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      
+
       {searchTerm && (
         <IoMdClose
           size={50}
