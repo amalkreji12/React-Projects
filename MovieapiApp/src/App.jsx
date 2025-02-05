@@ -4,7 +4,7 @@ import "./App.css";
 import SearchBar from "./components/Search/SearchBar";
 import Loader from "./components/Mics/Loader";
 import MovieCard from "./components/MovieCard/MovieCard";
-
+import { useDebounce } from "react-use";
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
@@ -21,7 +21,9 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [movieList, setMovieList] = useState([]);
   const [isloading, setIsLoading] = useState(false);
+  const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
 
+  useDebounce(() => setDebounceSearchTerm(searchTerm), 500, [searchTerm]);
   const fetchMovies = async (query = "") => {
     setIsLoading(true);
     setErrorMessage("");
@@ -32,7 +34,7 @@ function App() {
         : `${API_BASE_URL}/discover/movie?sort_by=popularity`;
 
       const response = await fetch(endpoint, API_OPTIONS);
-      
+
       if (!response.ok) {
         throw new Error("Fetching movies failed");
       }
@@ -54,8 +56,8 @@ function App() {
   };
 
   useEffect(() => {
-    fetchMovies(searchTerm);
-  }, [searchTerm]);
+    fetchMovies(debounceSearchTerm);
+  }, [debounceSearchTerm]);
 
   return (
     <main>
