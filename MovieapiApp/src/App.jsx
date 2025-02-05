@@ -33,6 +33,7 @@ function App() {
         setMovieList([]);
         return;
       }
+      setMovieList(data.Response || []);
     } catch (error) {
       console.log("error fetching movies", error);
       setErrorMessage("Error fetching movies");
