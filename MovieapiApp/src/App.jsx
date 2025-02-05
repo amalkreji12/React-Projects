@@ -1,6 +1,9 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from "react";
 import "./App.css";
 import SearchBar from "./components/Search/SearchBar";
+import Loader from "./components/Mics/Loader";
+import MovieCard from "./components/MovieCard/MovieCard";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -17,9 +20,12 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [movieList, setMovieList] = useState([]);
-  const [loading, isLoading] = useState(true);
+  const [isloading, setIsLoading] = useState(false);
 
   const fetchMovies = async () => {
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
       const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity`;
       const response = await fetch(endpoint, API_OPTIONS);
@@ -28,15 +34,18 @@ function App() {
       }
 
       const data = await response.json();
+      console.log(data.results);
       if (data.Response === "False") {
         setErrorMessage(data.Error || "Failed to fetch movies");
         setMovieList([]);
         return;
       }
-      setMovieList(data.Response || []);
+      setMovieList(data.results || []);
     } catch (error) {
       console.log("error fetching movies", error);
       setErrorMessage("Error fetching movies");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,7 +67,19 @@ function App() {
         </header>
 
         <section className="all-movies">
-          <h2>All Movies</h2>
+          <h2 className="mt-[40px]">All Movies</h2>
+
+          {isloading ? (
+            <Loader/>
+          ) : errorMessage ? (
+            <p className="text-red-500">{errorMessage}</p>
+          ) : (
+            <ul>
+              {movieList.map((movies) => (
+                <MovieCard key={movies.id} movie={movies}/>
+              ))}
+            </ul>
+          )}
         </section>
       </div>
     </main>
