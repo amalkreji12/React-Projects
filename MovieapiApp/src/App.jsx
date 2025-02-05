@@ -22,13 +22,17 @@ function App() {
   const [movieList, setMovieList] = useState([]);
   const [isloading, setIsLoading] = useState(false);
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (query = "") => {
     setIsLoading(true);
     setErrorMessage("");
 
     try {
-      const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity`;
+      const endpoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity`;
+
       const response = await fetch(endpoint, API_OPTIONS);
+      
       if (!response.ok) {
         throw new Error("Fetching movies failed");
       }
@@ -50,8 +54,8 @@ function App() {
   };
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(searchTerm);
+  }, [searchTerm]);
 
   return (
     <main>
@@ -70,13 +74,13 @@ function App() {
           <h2 className="mt-[40px]">All Movies</h2>
 
           {isloading ? (
-            <Loader/>
+            <Loader />
           ) : errorMessage ? (
             <p className="text-red-500">{errorMessage}</p>
           ) : (
             <ul>
               {movieList.map((movies) => (
-                <MovieCard key={movies.id} movie={movies}/>
+                <MovieCard key={movies.id} movie={movies} />
               ))}
             </ul>
           )}
