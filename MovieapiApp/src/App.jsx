@@ -41,7 +41,7 @@ function App() {
       }
 
       const data = await response.json();
-      //console.log(data.results);
+      // console.log(data.results);
       if (data.Response === "False") {
         setErrorMessage(data.Error || "Failed to fetch movies");
         setMovieList([]);
@@ -49,7 +49,10 @@ function App() {
       }
       setMovieList(data.results || []);
 
-      updateSearchCount();
+      if(query && data.results.length > 0){
+        await updateSearchCount(query,data.results[0]);
+      }
+      
 
     } catch (error) {
       console.log("error fetching movies", error);
