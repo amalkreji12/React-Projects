@@ -1,2 +1,3 @@
 movielist/.env
 MovieapiApp/.env.local
+weatherApp/.env.local
