@@ -7,8 +7,10 @@ const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 function App() {
   const [weatherData, setWeatherData] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isloading, setIsLoading] = useState(true);
 
   const fetchWeatherData = async (city) => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`
@@ -25,19 +27,25 @@ function App() {
           weatherType: weather.weather[0].main,
           icon: weather.weather[0].icon,
         });
+        setIsLoading(false);
       } else {
-        setWeatherData(false); // Reset on invalid city
-        alert("City not found. Please try again!");
+        setWeatherData(false);
+        //alert("City not found. Please try again!");
       }
     } catch (error) {
       console.log(error);
-      alert("An error occurred. Please try again later.");
+      //alert("An error occurred. Please try again later.");
+      // setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchWeatherData("Delhi");
-  }, []);
+    if (searchTerm === "") {
+      fetchWeatherData("Delhi");
+    }
+  }, [searchTerm]);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
@@ -99,7 +107,11 @@ function App() {
           </button>
         </div>
 
-        {weatherData ? (
+        {isloading ? (
+          <div className="text-center text-lg font-semibold text-gray-700">
+            🔄 Loading...
+          </div>
+        ) : weatherData ? (
           <div className="flex flex-col items-center bg-gradient-to-b from-blue-400 to-blue-500 text-white rounded-3xl p-6 w-full shadow-lg">
             <div className="flex items-center justify-between w-full mb-4">
               <div>
@@ -128,8 +140,8 @@ function App() {
             </div>
           </div>
         ) : (
-          <p className="text-gray-600 mt-4 text-center">
-            Enter a city name to view the weather.
+          <p className="mt-4 text-center text-lg font-medium text-blue-700 bg-blue-100 py-2 px-4 rounded-lg shadow-sm">
+            🌤️ Enter a city name to explore the current weather conditions!
           </p>
         )}
       </div>
